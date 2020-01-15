@@ -4,6 +4,7 @@ const User = require('./../db/models/user')
 
 const auth = require('./../authorization/auth')
 const permit = require('./../authorization/admin')
+const userType = require('./../authorization/userType')
 
 
 router.delete('/user/logout', auth, async(req, res) => {
@@ -32,26 +33,23 @@ router.post('/user/admin', permit, async(req, res) => {
 
 router.post('/user', async(req, res) => {
     try {
+        if (req.body.roles) {
+            throw new Error('traying to hack? oki doki calling fbi :_D')
+        }
         const user = await new User(req.body)
         if (!user) {
             res.status(400).send('Are u fucking kidding me broh :V')
         }
 
-        await User.generateJwt(user)
-
-        if (user["admin"]) {
-            throw new Error('que te crees muy gracioso no? pues vete a tomar por culo')
-        }
-
-        user["admin"] = false
+        const token = await User.generateJwt(user)
+        user["role"] = userType.normalUser.value
 
         await user.save()
-        res.send(user)
+        res.send({ user, token })
     } catch (e) {
         res.status(400).send(`oh shit here we go awaint ${e}`)
     }
 })
-
 router.post('/user/login', async(req, res) => {
     try {
         const user = await User.PasswordWorks(req.body)

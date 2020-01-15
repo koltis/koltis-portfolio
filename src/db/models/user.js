@@ -30,7 +30,7 @@ const UserSchema = new Schema({
         required: true,
         validate(value) {
             if (value.includes('password')) {
-                throw new Error('Vete a la mierda con esa seguridad te hashea la contraseña tu abuela')
+                throw new Error('not a really safe password pls dont use password inside of your password')
             }
         },
     },
@@ -39,9 +39,8 @@ const UserSchema = new Schema({
             type: String
         }
     }],
-    admin: {
-        type: Boolean,
-        required: true
+    role: {
+        type: Number
     }
 }, {
     timestamps: true

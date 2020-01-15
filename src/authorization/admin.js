@@ -1,13 +1,14 @@
 const User = require('./../db/models/user')
 const jwt = require('jsonwebtoken')
+const userType = require('./userType')
 
 const permit = async(req, res, next) => {
     try {
-        const token = req.header('Authorization').split(' ')[1]
+        const [, token] = req.header('Authorization').split(' ')
         const { data: _id } = id = await jwt.verify(token, 'iqij23ij41i9und')
         const user = await User.findById(_id)
         if (!user) { throw new Error('Bad Token') }
-        if (!user['admin']) {
+        if (user.role !== userType.admin.value) {
             throw new Error(`
              Gandalf: I am the servant of the Secret Fire,wielder of the Flame of Anor... 
              Gandalf: The dark fire will not avail you!Flame of Udûn!
