@@ -5,6 +5,7 @@ const bp = require("body-parser");
 const userRouter = require('./routers/users')
 const contactsRouter = require('./routers/contacts')
 const entriesRouter = require('./routers/entries')
+const commentsRouter = require('./routers/comments')
 
 const Entry = require('./db/models/entries')
     //select port
@@ -21,6 +22,7 @@ app.use(mongoSanitize())
 app.use(userRouter)
 app.use(contactsRouter)
 app.use(entriesRouter)
+app.use(commentsRouter)
 
 // too load all the entries
 app.get('/', async(req, res) => {
